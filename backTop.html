@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>回到顶部</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		html,body{
+			height: 100%;
+			width: 100%;
+		}
+		#box{
+			width: 100%;
+			height: 800%;
+			background: -webkit-linear-gradient(red,grey,pink,blue,green,purple)
+		}
+		#up{
+			width: 50px;
+			height: 50px;
+			text-align: center;
+			background: black;
+			color: white;
+			line-height: 50px;
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			cursor: pointer;
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="box">
+		<div id="up"></div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	// 需求：
+	// 默认情况下Up消失，当划过一屏的时候up显示
+	// 点击up，匀速回到顶部
+	// 回到顶部的途中，希望能够随时停下来
+	// 在规定的时间内回到顶部
+
+	class BackTop{
+		constructor(){
+			this.DOM = {
+				'UP'  : document.getElementById('up'),
+				'BOX' : document.getElementById('box'),
+			}
+			this.TIMER = null;
+			this.FLG = false; // 定义一个标识符 来记录滚动是否是在滚动中
+		};
+		scroll(){
+			// 这里解释一下：第一次，从上至下滚动页面时 标识符为在这里改为了true  但定时器在这里也没用到
+			// 第二次 点击时标识符被标识为false 进入滚动事件 将标识置为true 在下次触发滚动事件时 就会走进这个为true的判断 滚动就会停止   这就形成了随时停下的功能
+			if(this.FLG){ // 如果标识符为true 就将定时器清除 那么滚动条就不走了
+	            window.clearInterval(this.TIMER);
+	        }
+	        this.FLG = true;
+			// 滚动超出一屏时 up按钮展示 否则隐藏
+			let winH = document.documentElement.clientHeight;
+			let winT = document.documentElement.scrollTop;
+			winT >= winH ? this.DOM.UP.style.display='block' : this.DOM.UP.style.display='none';
+
+		};
+		top(duration,interval){
+			this.TIMER = window.setInterval(()=>{
+				// 到顶上了
+				if(document.documentElement.scrollTop == 0){
+					document.documentElement.scrollTop = 0;
+					window.clearInterval(this.TIMER);
+					return;
+				}
+				// 没到顶上  继续走  后面是计算的步长
+				document.documentElement.scrollTop -= document.documentElement.scrollTop / duration * interval;
+	        	this.FLG = false;// 将标识符置为false 滚动条可以继续走
+
+			},20)
+		};
+		handle(){
+			window.onscroll = this.scroll.bind(this);
+			// 此处将规定的时间传进这去  在两秒内完成 
+			this.DOM.UP.onclick = this.top.bind(this,2000,50);
+		};
+		init(){
+			this.handle();
+		}
+	}
+	new BackTop().init();
+
+</script>
