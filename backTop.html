@@ -54,17 +54,16 @@
 			this.FLG = false; // 定义一个标识符 来记录滚动是否是在滚动中
 		};
 		scroll(){
-			// 这里解释一下：第一次，从上至下滚动页面时 标识符为在这里改为了true  但定时器在这里也没用到
-			// 第二次 点击时标识符被标识为false 进入滚动事件 将标识置为true 在下次触发滚动事件时 就会走进这个为true的判断 滚动就会停止   这就形成了随时停下的功能
-			if(this.FLG){ // 如果标识符为true 就将定时器清除 那么滚动条就不走了
-	            window.clearInterval(this.TIMER);
-	        }
-	        this.FLG = true;
-			// 滚动超出一屏时 up按钮展示 否则隐藏
-			let winH = document.documentElement.clientHeight;
-			let winT = document.documentElement.scrollTop;
-			winT >= winH ? this.DOM.UP.style.display='block' : this.DOM.UP.style.display='none';
-
+		    // 这里解释一下：第一次，从上至下滚动页面时 标识符为在这里改为了true  但定时器在这里也没用到
+		    // 第二次 点击时标识符被标识为false 进入滚动事件 将标识置为true 在下次触发滚动事件时 就会走进这个为true的判断 滚动就会停止   这就形成了随时停下的功能
+		    if(this.FLG){ // 如果标识符为true 就将定时器清除 那么滚动条就不走了
+	                window.clearInterval(this.TIMER);
+	            }
+	            this.FLG = true;
+		    // 滚动超出一屏时 up按钮展示 否则隐藏
+		    let winH = document.documentElement.clientHeight;
+		    let winT = document.documentElement.scrollTop;
+		    winT >= winH ? this.DOM.UP.style.display='block' : this.DOM.UP.style.display='none';
 		};
 		top(duration,interval){
 			this.TIMER = window.setInterval(()=>{
